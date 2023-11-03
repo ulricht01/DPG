@@ -30,6 +30,13 @@ class Bilek:
         
         cv.imwrite('obraz.jpg', self.image)
 
+    def count_spots_in_image(self, image):
+        image = cv.imread(image)
+        gray_image = cv.cvtColor(image, cv.COLOR_BGR2GRAY)
+        _, binary_image = cv.threshold(gray_image, 220, 255, cv.THRESH_BINARY_INV)
+        contours, _ = cv.findContours(binary_image, cv.RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE)
+        return len(contours)
+
 if __name__ == "__main__":
     try:
         width = int(input("Zadej šířku daného obrázku: "))
@@ -47,6 +54,8 @@ if __name__ == "__main__":
         bilek = Bilek(width, height)
         bilek.vytvor_se()
         bilek.vytvor_skvrnu()
-        print(f"Počet skvrn je: {len(bilek.spots)}")
+        print(f"Počet skvrn je dle seznamu: {len(bilek.spots)}")
+        print(f"Počet skvrn je dle obrazu: {bilek.count_spots_in_image('obraz.jpg')}")
+
     except ValueError:
         print("Toto musí být číslo!")
